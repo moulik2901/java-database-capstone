@@ -16,7 +16,58 @@ public class DashboardController {
 //    - Accepts an admin's token as a path variable.
 //    - Validates the token using the shared service for the `"admin"` role.
 //    - If the token is valid (i.e., no errors returned), forwards the user to the `"admin/adminDashboard"` view.
-//    - If invalid, redirects to the root URL, likely the login or home page.
+//    - If invalid, redirectpackage com.project.back_end.mvc;
+
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import com.project.back_end.service.Service; // adjust package if needed
+
+@Controller
+public class DashboardController {
+
+    // ----------------------
+    // AUTOWIRED SERVICE
+    // ----------------------
+    @Autowired
+    private Service service;
+
+    // ----------------------
+    // ADMIN DASHBOARD
+    // ----------------------
+    @GetMapping("/adminDashboard/{token}")
+    public String adminDashboard(@PathVariable String token) {
+
+        Map<String, String> result = service.validateToken(token, "admin");
+
+        // If map is empty → token is valid
+        if (result.isEmpty()) {
+            return "admin/adminDashboard";
+        }
+
+        // Invalid token → redirect to login
+        return "redirect:/";
+    }
+
+    // ----------------------
+    // DOCTOR DASHBOARD
+    // ----------------------
+    @GetMapping("/doctorDashboard/{token}")
+    public String doctorDashboard(@PathVariable String token) {
+
+        Map<String, String> result = service.validateToken(token, "doctor");
+
+        if (result.isEmpty()) {
+            return "doctor/doctorDashboard";
+        }
+
+        return "redirect:/";
+    }
+}s to the root URL, likely the login or home page.
 
 
 // 4. Define the `doctorDashboard` Method:
